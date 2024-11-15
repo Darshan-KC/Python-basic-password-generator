@@ -17,7 +17,15 @@ class SimplePassword(PasswordGenerator):
         return ''.join(password)
 
 class IntermediatePassword(PasswordGenerator):
-    pass
+    def generate(self):
+        password = []
+        for i in range(self.length):
+            char_choice = self.get_pseudo_random(0, 1)  # 0 for lowercase, 1 for uppercase
+            if char_choice == 0:
+                password.append(chr(self.get_pseudo_random(97, 122)))  # Lowercase
+            else:
+                password.append(chr(self.get_pseudo_random(65, 90)))   # Uppercase
+        return ''.join(password)
 
 class strongPassword(PasswordGenerator):
     pass
