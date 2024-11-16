@@ -28,7 +28,22 @@ class IntermediatePassword(PasswordGenerator):
         return ''.join(password)
 
 class strongPassword(PasswordGenerator):
-    pass
+    def generate(self):
+        password = []
+        for i in range(self.length):
+            char_type = self.get_pseudo_random(1, 4)  # 1: Uppercase, 2: Lowercase, 3: Number, 4: Symbol
+            if char_type == 1:
+                password.append(chr(self.get_pseudo_random(65, 90)))  # Uppercase
+            elif char_type == 2:
+                password.append(chr(self.get_pseudo_random(97, 122)))  # Lowercase
+            elif char_type == 3:
+                password.append(chr(self.get_pseudo_random(48, 57)))   # Numbers
+            else:
+                # Symbols like !, #, $, %, &, @ (ASCII 33 to 38, 64)
+                symbols = [33, 35, 36, 37, 38, 64]
+                symbol_index = self.get_pseudo_random(0, len(symbols) - 1)
+                password.append(chr(symbols[symbol_index]))
+        return ''.join(password)
 
 def main():
     length = 8
