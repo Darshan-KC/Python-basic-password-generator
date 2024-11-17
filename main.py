@@ -27,7 +27,7 @@ class IntermediatePassword(PasswordGenerator):
                 password.append(chr(self.get_pseudo_random(65, 90)))   # Uppercase
         return ''.join(password)
 
-class strongPassword(PasswordGenerator):
+class StrongPassword(PasswordGenerator):
     def generate(self):
         password = []
         for i in range(self.length):
@@ -46,10 +46,28 @@ class strongPassword(PasswordGenerator):
         return ''.join(password)
 
 def main():
-    length = 8
-    generate = SimplePassword(length)
-    password = generate.generate()
-    print(f"Generated Password: {password}")
+    # length = 8
+    # generate = SimplePassword(length)
+    # password = generate.generate()
+    # print(f"Generated Password: {password}")
+    try:
+        strength = input("Select password strength (simple, intermediate, strong): ").strip().lower()
+        length = int(input("Enter the length of the password: "))
+
+        if strength == "simple":
+            generator = SimplePassword(length)
+        elif strength == "intermediate":
+            generator = IntermediatePassword(length)
+        elif strength == "strong":
+            generator = StrongPassword(length)
+        else:
+            print("Invalid strength selected.")
+            return
+
+        password = generator.generate()
+        print(f"Generated Password: {password}")
+    except ValueError:
+        print("Invalid input. Length should be an integer.")
 
 if __name__ == "__main__":
     main()
