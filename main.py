@@ -1,15 +1,56 @@
 class PasswordGenerator:
     def __init__(self, length:int) -> None:
         self.length = length
+        self.seed = 1234567
+        self.seed = self._generate_initial_seed()
+    
+    def _generate_initial_seed(self):
+        """
+        Generate a dynamic initial seed based on multiple changing factors.
+        
+        Returns:
+            int: A dynamically generated seed value
+        """
+        # Combine multiple sources of "randomness" without external modules
+        factor1 = 12345  # Constant factor
+        factor2 = 54321  # Another constant factor
+        
+        # Use object's memory address and its changing state as a source of variation
+        factor3 = id(self)
+        
+        # Create a seed that changes between runs
+        return (factor1 * factor2 + factor3) % (2**32)
         
     def generate(self):
         """Base method to be overridden in subclasses."""
         raise NotImplementedError("Sub classes must implemented this method")
 
     def get_pseudo_random(self,min_val, max_val):
-        """Generate a pseudo-random number using simple math operations."""
-        seed = (min_val * 31 + max_val * 17) % 97  # Simple seed calculation
-        return (seed * 37 + self.length * 23) % (max_val - min_val + 1) + min_val
+        """
+        Generate a pseudo-random number using mathematical operations.
+        
+        Args:
+            min_val (int): Minimum value of the range
+            max_val (int): Maximum value of the range
+        
+        Returns:
+            int: A pseudo-randomly generated number within the specified range
+        """
+        
+        # Linear Congruential Generator (LCG) algorithm
+        # LCG parameters chosen to provide good distribution
+        a = 1664525   # Multiplier
+        c = 1013904223  # Increment
+        m = 2**32     # Modulus
+        
+        # Update seed using LCG formula
+        self.seed = (a * self.seed + c) % m
+        
+        # Scale the random value to the desired range
+        random_value = min_val + (self.seed % (max_val - min_val + 1))
+        
+        return random_value
+        
     
 class SimplePassword(PasswordGenerator):
     def generate(self):
